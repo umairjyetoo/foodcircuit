@@ -4,7 +4,7 @@ const app = express();
 
 // Serve the PDF when the root URL is accessed
 app.get('/', (req, res) => {
-  const filePath = path.join(__dirname, 'files', 'food_circuit.pdf'); // PDF location
+  const filePath = path.join(__dirname, 'files', 'foodcircuit.pdf'); // PDF location
   res.sendFile(filePath);
 });
 
