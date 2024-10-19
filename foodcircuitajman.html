@@ -46,13 +46,17 @@
 </head>
 <body>
 
-  <!-- Embed the PDF using an iframe -->
-  <!-- <iframe src="foodcircuit.pdf" type="application/pdf"></iframe> -->
-
   <!-- Fallback content for browsers that do not support PDFs -->
   <p>If you're not redirected within 3 seconds then click below<br>
-    <a href="foodcircuit.pdf" class="open-pdf-link" target="_blank">Click here to view the Page</a>
+    <a id="pdf-link" href="foodcircuit.pdf" class="open-pdf-link" target="_blank">Click here to view the Page</a>
   </p>
+
+  <script>
+    // Automatically click the link after 2 seconds
+    setTimeout(function() {
+      document.getElementById('pdf-link').click();
+    }, 1000);
+  </script>
 
 </body>
 </html>
