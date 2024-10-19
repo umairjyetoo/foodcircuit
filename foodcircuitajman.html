@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Responsive PDF Viewer</title>
+  <title>Responsive PDF Viewer with Links</title>
   <style>
     body {
       margin: 0;
@@ -16,6 +16,7 @@
     }
 
     #pdf-viewer {
+      position: relative;
       width: 100%;
       height: 100vh;
       display: flex;
@@ -27,6 +28,22 @@
       width: 100%;
       height: auto;
       border: none;
+    }
+
+    .pdf-annotations {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      pointer-events: none; /* This allows clicks to pass through to annotations */
+    }
+
+    .pdf-link {
+      position: absolute;
+      pointer-events: auto;
+      cursor: pointer;
+      color: blue;
     }
 
     /* Adjust for mobile devices */
@@ -42,6 +59,7 @@
 
   <div id="pdf-viewer">
     <canvas id="pdf-canvas"></canvas>
+    <div class="pdf-annotations" id="pdf-annotations"></div>
   </div>
 
   <!-- PDF.js Library -->
@@ -49,26 +67,56 @@
   <script>
     const url = 'foodcircuit.pdf'; // Path to your PDF
 
-    // Fetch the PDF
+    const renderPDF = (pdf, page) => {
+      const scale = 1.5; // Adjust scale for your needs
+      const viewport = page.getViewport({ scale });
+
+      const canvas = document.getElementById('pdf-canvas');
+      const context = canvas.getContext('2d');
+      canvas.height = viewport.height;
+      canvas.width = viewport.width;
+
+      const renderContext = {
+        canvasContext: context,
+        viewport: viewport
+      };
+
+      // Render the PDF page
+      page.render(renderContext);
+
+      // Render the annotations (links) on top of the canvas
+      page.getAnnotations().then(annotations => {
+        const annotationLayerDiv = document.getElementById('pdf-annotations');
+        annotationLayerDiv.innerHTML = ''; // Clear previous annotations
+
+        annotations.forEach(annotation => {
+          if (annotation.subtype === 'Link' && annotation.url) {
+            const linkElement = document.createElement('a');
+            linkElement.href = annotation.url;
+            linkElement.target = '_blank';
+            linkElement.classList.add('pdf-link');
+
+            // Set position based on annotation coordinates
+            const rect = annotation.rect;
+            const [x1, y1, x2, y2] = rect;
+            const scaleFactor = viewport.transform[0];
+
+            linkElement.style.left = `${x1 * scaleFactor}px`;
+            linkElement.style.top = `${viewport.height - y2 * scaleFactor}px`; // Flip Y axis
+            linkElement.style.width = `${(x2 - x1) * scaleFactor}px`;
+            linkElement.style.height = `${(y2 - y1) * scaleFactor}px`;
+
+            annotationLayerDiv.appendChild(linkElement);
+          }
+        });
+      });
+    };
+
+    // Load and render the PDF
     const loadingTask = pdfjsLib.getDocument(url);
     loadingTask.promise.then(function(pdf) {
-      // Fetch the first page
       pdf.getPage(1).then(function(page) {
-        const scale = 1.5;  // Adjust the scale for better viewing
-        const viewport = page.getViewport({ scale: scale });
-
-        // Prepare the canvas using PDF page dimensions
-        const canvas = document.getElementById('pdf-canvas');
-        const context = canvas.getContext('2d');
-        canvas.height = viewport.height;
-        canvas.width = viewport.width;
-
-        // Render the page into the canvas context
-        const renderContext = {
-          canvasContext: context,
-          viewport: viewport
-        };
-        page.render(renderContext);
+        renderPDF(pdf, page);
       });
     });
   </script>
