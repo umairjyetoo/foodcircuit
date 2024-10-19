@@ -41,33 +41,38 @@
       text-align: center;
       font-size: 20px;
       color: #333;
+      display: none; /* Initially hide the fallback */
     }
   </style>
 </head>
 <body>
 
   <!-- Embed the PDF using an iframe -->
-  <iframe id="pdf-frame" src="foodcircuit.pdf" type="application/pdf" onerror="handlePdfError()"></iframe>
+  <iframe id="pdf-frame" src="foodcircuit.pdf" type="application/pdf"></iframe>
 
   <!-- Fallback content for browsers that do not support PDFs -->
-  <p id="fallback" style="display: none;">
+  <p id="fallback">
     Your browser does not support embedded PDFs. <br>
     <a href="foodcircuit.pdf" class="open-pdf-link" target="_blank" id="pdf-link">Click here to view the PDF</a>
   </p>
 
   <script>
-    // Function to handle PDF loading error
-    function handlePdfError() {
-      // Hide the iframe
+    // Check if the iframe successfully loads the PDF
+    document.getElementById('pdf-frame').addEventListener('load', function() {
+      // If the PDF loads successfully, hide the fallback message
+      document.getElementById('fallback').style.display = 'none';
+    });
+
+    // Check for error loading PDF
+    document.getElementById('pdf-frame').addEventListener('error', function() {
+      // If an error occurs, show the fallback message
       document.getElementById('pdf-frame').style.display = 'none';
-      // Show the fallback message
-      const fallback = document.getElementById('fallback');
-      fallback.style.display = 'block';
-      // Automatically click the link after a slight delay
+      document.getElementById('fallback').style.display = 'block';
+      // Automatically click the link to open the PDF in a new tab after a delay
       setTimeout(() => {
         document.getElementById('pdf-link').click();
-      }, 1000); // Adjust the timeout as necessary
-    }
+      }, 1000); // Optional: Adjust delay if needed
+    });
   </script>
 
 </body>
