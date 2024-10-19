@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Food Circuit</title>
+  <title>Open PDF with Clickable Links</title>
   <style>
     body {
       margin: 0;
@@ -20,17 +20,10 @@
       height: 100vh;
       border: none;
     }
-
-    /* Ensure the PDF is properly sized on smaller devices */
-    @media (max-width: 768px) {
-      iframe {
-        height: 80vh; /* Adjust height for smaller screens */
-      }
-    }
   </style>
 </head>
 <body>
-  <!-- Embed the PDF with zoom to fit different screens -->
-  <iframe src="foodcircuit.pdf#zoom=auto" type="application/pdf"></iframe>
+  <!-- Embed the PDF with a scale parameter to control zoom -->
+  <iframe src="foodcircuit.pdf#zoom=100" type="application/pdf"></iframe>
 </body>
 </html>
