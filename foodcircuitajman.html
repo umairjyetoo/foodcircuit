@@ -3,82 +3,65 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PDF Viewer with Clickable Links</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf_viewer.min.css">
+  <title>PDF.js Basic Viewer</title>
   <style>
     body {
       margin: 0;
-      background-color: #f0f0f0;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
-    }
-
-    #pdf-viewer-container {
-      width: 100%;
-      height: 100vh;
+      background-color: #f0f0f0;
     }
     
-    #viewer {
+    #pdf-viewer {
       width: 100%;
-      height: 100%;
-      overflow: auto;
-    }
-
-    .pdfViewer {
-      width: 100%;
-      height: auto;
+      height: 100vh;
     }
   </style>
 </head>
 <body>
 
-  <div id="pdf-viewer-container">
-    <div id="viewer" class="pdfViewer"></div>
-  </div>
+  <canvas id="pdf-viewer"></canvas>
 
   <!-- PDF.js library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf_viewer.min.js"></script>
 
   <script>
     const url = 'foodcircuit.pdf'; // Path to your PDF
 
-    // Initialize the PDF.js viewer
-    const pdfViewerContainer = document.getElementById('viewer');
-    const eventBus = new pdfjsViewer.EventBus();
-    const pdfLinkService = new pdfjsViewer.PDFLinkService({
-      eventBus: eventBus
-    });
-    const pdfFindController = new pdfjsViewer.PDFFindController({
-      eventBus: eventBus,
-      linkService: pdfLinkService,
-    });
-    
-    const pdfViewer = new pdfjsViewer.PDFViewer({
-      container: pdfViewerContainer,
-      eventBus: eventBus,
-      linkService: pdfLinkService,
-      findController: pdfFindController,
-    });
-    
-    pdfLinkService.setViewer(pdfViewer);
+    const pdfjsLib = window['pdfjs-dist/build/pdf'];
 
     // Load the PDF
     const loadingTask = pdfjsLib.getDocument(url);
-    loadingTask.promise.then(function(pdfDocument) {
-      pdfViewer.setDocument(pdfDocument);
-      pdfLinkService.setDocument(pdfDocument, null);
-    });
+    loadingTask.promise.then(function(pdf) {
+      console.log('PDF loaded');
 
-    // Rescale PDF to fit screen
-    window.addEventListener('resize', () => {
-      pdfViewer.currentScaleValue = 'page-width';
-    });
+      // Fetch the first page
+      pdf.getPage(1).then(function(page) {
+        console.log('Page loaded');
 
-    // Initially set to fit width
-    pdfViewer.currentScaleValue = 'page-width';
+        const scale = 1.5;
+        const viewport = page.getViewport({ scale: scale });
+
+        // Prepare canvas using PDF page dimensions
+        const canvas = document.getElementById('pdf-viewer');
+        const context = canvas.getContext('2d');
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+
+        // Render the page into the canvas context
+        const renderContext = {
+          canvasContext: context,
+          viewport: viewport
+        };
+        page.render(renderContext).promise.then(function() {
+          console.log('Page rendered');
+        });
+      });
+    }, function (reason) {
+      console.error('Error loading PDF: ' + reason);
+    });
   </script>
 </body>
 </html>
