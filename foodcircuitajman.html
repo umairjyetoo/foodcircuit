@@ -3,31 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Open PDF with Clickable Links</title>
+  <title>Food Circuit</title>
   <style>
     body {
       margin: 0;
+      height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
       background-color: #f0f0f0;
       font-family: Arial, sans-serif;
-    }
-
-    .open-pdf-link {
-      display: inline-block;
-      padding: 20px 40px;
-      background-color: #4caf50;
-      color: white;
-      font-size: 24px;
-      border-radius: 8px;
-      text-decoration: none;
-      transition: background-color 0.3s ease;
-    }
-
-    .open-pdf-link:hover {
-      background-color: #388e3c;
     }
 
     iframe {
@@ -35,24 +20,10 @@
       height: 100vh;
       border: none;
     }
-
-    /* Fallback text style */
-    p {
-      text-align: center;
-      font-size: 20px;
-      color: #333;
-    }
   </style>
 </head>
 <body>
-
-  <!-- Embed the PDF using an iframe -->
+  <!-- Embed the PDF directly with no fallback -->
   <iframe src="foodcircuit.pdf" type="application/pdf"></iframe>
-
-  <!-- Fallback content for browsers that do not support PDFs -->
-  <p>Your browser does not support embedded PDFs. <br>
-    <a href="foodcircuit.pdf" class="open-pdf-link" target="_blank">Click here to view the PDF</a>
-  </p>
-
 </body>
 </html>
