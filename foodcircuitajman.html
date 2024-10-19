@@ -13,6 +13,29 @@
       height: 100vh;
       background-color: #f0f0f0;
       font-family: Arial, sans-serif;
+      overflow: hidden; /* Prevents scrolling */
+    }
+
+    .pdf-container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .fallback {
+      display: none; /* Hide fallback by default */
+      text-align: center;
+      font-size: 20px;
+      color: #333;
     }
 
     .open-pdf-link {
@@ -29,50 +52,38 @@
     .open-pdf-link:hover {
       background-color: #388e3c;
     }
-
-    iframe {
-      width: 100%;
-      height: 100vh;
-      border: none;
-    }
-
-    /* Fallback text style */
-    p {
-      text-align: center;
-      font-size: 20px;
-      color: #333;
-      display: none; /* Initially hide the fallback */
-    }
   </style>
 </head>
 <body>
 
-  <!-- Embed the PDF using an iframe -->
-  <iframe id="pdf-frame" src="foodcircuit.pdf" type="application/pdf"></iframe>
-
-  <!-- Fallback content for browsers that do not support PDFs -->
-  <p id="fallback">
-    Your browser does not support embedded PDFs. <br>
-    <a href="foodcircuit.pdf" class="open-pdf-link" target="_blank" id="pdf-link">Click here to view the PDF</a>
-  </p>
+  <div class="pdf-container">
+    <iframe id="pdf-frame" src="foodcircuit.pdf" type="application/pdf"></iframe>
+    <div class="fallback" id="fallback">
+      Your browser does not support embedded PDFs. <br>
+      <a href="foodcircuit.pdf" class="open-pdf-link" target="_blank" id="pdf-link">Click here to view the PDF</a>
+    </div>
+  </div>
 
   <script>
     // Check if the iframe successfully loads the PDF
-    document.getElementById('pdf-frame').addEventListener('load', function() {
-      // If the PDF loads successfully, hide the fallback message
-      document.getElementById('fallback').style.display = 'none';
-    });
+    const pdfFrame = document.getElementById('pdf-frame');
+    const fallback = document.getElementById('fallback');
 
-    // Check for error loading PDF
-    document.getElementById('pdf-frame').addEventListener('error', function() {
+    pdfFrame.onload = function() {
+      // If the PDF loads successfully, hide the fallback message
+      fallback.style.display = 'none';
+    };
+
+    pdfFrame.onerror = function() {
       // If an error occurs, show the fallback message
-      document.getElementById('pdf-frame').style.display = 'none';
-      document.getElementById('fallback').style.display = 'block';
+      pdfFrame.style.display = 'none';
+      fallback.style.display = 'block';
+      
       // Automatically click the link to open the PDF in a new tab after a delay
       setTimeout(() => {
         document.getElementById('pdf-link').click();
       }, 1000); // Optional: Adjust delay if needed
-    });
+    };
   </script>
 
 </body>
