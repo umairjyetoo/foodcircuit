@@ -32,13 +32,6 @@
       background-color: #388e3c;
     }
 
-    iframe {
-      width: 100%;
-      height: 90vh; /* Adjust height for better visibility */
-      border: none;
-      display: none; /* Hide iframe initially */
-    }
-
     /* Fallback text style */
     p {
       text-align: center;
@@ -50,39 +43,31 @@
 </head>
 <body>
 
-  <!-- Embed the PDF using an iframe -->
-  <iframe id="pdf-frame" src="foodcircuit.pdf" type="application/pdf"></iframe>
-
   <!-- Fallback content for browsers that do not support PDFs -->
   <p id="fallback-message">Your browser does not support embedded PDFs. <br>
-    <a href="foodcircuit.pdf" class="open-pdf-link" target="_blank">Click here to view the Page</a>
+    <a href="foodcircuit.pdf" class="open-pdf-link" target="_blank">Click here to view the PDF</a>
   </p>
 
   <script>
-    const pdfFrame = document.getElementById('pdf-frame');
-    const fallbackMessage = document.getElementById('fallback-message');
+    // Attempt to load the PDF directly
+    window.onload = function() {
+      const pdfUrl = 'foodcircuit.pdf';
+      const iframe = document.createElement('iframe');
 
-    // Function to check if the PDF loads correctly
-    function checkPdfLoad() {
-      pdfFrame.onload = function() {
-        pdfFrame.style.display = 'block'; // Show iframe if loaded successfully
+      iframe.src = pdfUrl;
+      iframe.style.width = '100%';
+      iframe.style.height = '90vh'; // Adjust height for better visibility
+      iframe.style.border = 'none';
+
+      // Append iframe to body
+      document.body.appendChild(iframe);
+
+      // Fallback if PDF fails to load
+      iframe.onerror = function() {
+        iframe.style.display = 'none'; // Hide iframe if there's an error
+        document.getElementById('fallback-message').style.display = 'block'; // Show fallback message
       };
-
-      pdfFrame.onerror = function() {
-        pdfFrame.style.display = 'none'; // Hide iframe if there's an error
-        fallbackMessage.style.display = 'block'; // Show fallback message
-      };
-    }
-
-    // Run the PDF load check
-    checkPdfLoad();
-
-    // Redirect to PDF if iframe does not load within a specific time
-    setTimeout(() => {
-      if (pdfFrame.style.display === 'none') {
-        window.location.href = 'foodcircuit.pdf'; // Redirect to the PDF if the iframe does not load
-      }
-    }, 5000); // 5 seconds timeout
+    };
   </script>
 
 </body>
