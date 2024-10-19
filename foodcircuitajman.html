@@ -20,10 +20,17 @@
       height: 100vh;
       border: none;
     }
+
+    /* Ensure the PDF is properly sized on smaller devices */
+    @media (max-width: 768px) {
+      iframe {
+        height: 80vh; /* Adjust height for smaller screens */
+      }
+    }
   </style>
 </head>
 <body>
-  <!-- Embed the PDF directly with no fallback -->
-  <iframe src="foodcircuit.pdf" type="application/pdf"></iframe>
+  <!-- Embed the PDF with zoom to fit different screens -->
+  <iframe src="foodcircuit.pdf#zoom=auto" type="application/pdf"></iframe>
 </body>
 </html>
