@@ -46,10 +46,8 @@
   </p>
 
   <script>
-    // Automatically redirect to the PDF after 2 seconds
-    setTimeout(function() {
-      window.location.href = document.getElementById('pdf-link').href;
-    }, 2000);
+    // Redirect to the PDF immediately on page load
+    window.location.href = document.getElementById('pdf-link').href;
   </script>
 
 </body>
