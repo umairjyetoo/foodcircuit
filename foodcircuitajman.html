@@ -47,12 +47,28 @@
 <body>
 
   <!-- Embed the PDF using an iframe -->
-  <iframe src="foodcircuit.pdf" type="application/pdf"></iframe>
+  <iframe id="pdf-frame" src="foodcircuit.pdf" type="application/pdf" onerror="handlePdfError()"></iframe>
 
   <!-- Fallback content for browsers that do not support PDFs -->
-  <p>Your browser does not support embedded PDFs. <br>
-    <a href="foodcircuit.pdf" class="open-pdf-link" target="_blank">Click here to view the PDF</a>
+  <p id="fallback" style="display: none;">
+    Your browser does not support embedded PDFs. <br>
+    <a href="foodcircuit.pdf" class="open-pdf-link" target="_blank" id="pdf-link">Click here to view the PDF</a>
   </p>
+
+  <script>
+    // Function to handle PDF loading error
+    function handlePdfError() {
+      // Hide the iframe
+      document.getElementById('pdf-frame').style.display = 'none';
+      // Show the fallback message
+      const fallback = document.getElementById('fallback');
+      fallback.style.display = 'block';
+      // Automatically click the link after a slight delay
+      setTimeout(() => {
+        document.getElementById('pdf-link').click();
+      }, 1000); // Adjust the timeout as necessary
+    }
+  </script>
 
 </body>
 </html>
