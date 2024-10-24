@@ -30,6 +30,7 @@
       background-color: #388e3c;
     }
 
+    /* Fallback text style */
     p {
       text-align: center;
       font-size: 20px;
@@ -39,9 +40,15 @@
 </head>
 <body>
 
-  <p>
-    <a class="open-pdf-link" href="foodcircuit.pdf" target="_blank">Open PDF</a>
+  <!-- Fallback content for browsers that do not support PDFs -->
+  <p><br>
+    <a id="pdf-link" href="foodcircuit.pdf" target="_blank"></a>
   </p>
+
+  <script>
+    // Redirect to the PDF immediately on page load
+    window.location.href = document.getElementById('pdf-link').href;
+  </script>
 
 </body>
 </html>
